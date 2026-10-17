@@ -19,7 +19,9 @@ searchFormEl.addEventListener("submit", (event) => {
 	event.preventDefault();
 
 	// Validera sökfältet
-	validateSearchInput();
+	if (validateSearchInput()) {
+		getRecipes();
+	}
 });
 
 // --- Funktioner ---
@@ -35,5 +37,21 @@ function validateSearchInput() {
 		return false;
 	} else {
 		return true;
+	}
+}
+
+// Hämtar recept från API
+async function getRecipes() {
+	// Variabel för sökfrasen
+	const searchInput = searchInputEl.value.trim();
+
+	// Hämta data med fetch
+	try {
+		const response = await fetch(`https://dummyjson.com/recipes/search?q=${searchInput}`);
+		const data = await response.json();
+
+		console.log(data);
+	} catch (error) {
+		console.error("Något gick fel: " + error);
 	}
 }
