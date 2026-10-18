@@ -11,6 +11,7 @@ const searchInputEl = document.querySelector("#search");
 const recipeSectionEl = document.querySelector("#recipe");
 
 const errorEl = document.querySelector("#error");
+const messageEl = document.querySelector("#message");
 
 // --- Eventlyssnare ---
 
@@ -18,9 +19,9 @@ const errorEl = document.querySelector("#error");
 searchFormEl.addEventListener("submit", (event) => {
 	event.preventDefault();
 
-	// Validera sökfältet
+	// Validera sökfältet och hämta recept
 	if (validateSearchInput()) {
-		getRecipes();
+		getRecipe();
 	}
 });
 
@@ -41,18 +42,31 @@ function validateSearchInput() {
 }
 
 // Hämtar recept från API
-async function getRecipes() {
+async function getRecipe() {
 	// Variabel för sökfrasen
 	const searchInput = searchInputEl.value.trim();
 
 	// Hämta data med fetch
 	try {
 		const response = await fetch(`https://dummyjson.com/recipes/search?q=${searchInput}`);
+
+		// Kontrollera att API-anropet lyckades
+		if (!response.ok) {
+			throw new Error("Kunde inte hämta recept.");
+		}
+
 		const data = await response.json();
 
-		renderRecipe(data.recipes[0]);
+		// Kontrollera att sökfrasen genererade ett recept
+		if (data.recipes.length === 0) {
+			messageEl.innerHTML = "<p>Inga recept hittades, prova en annan sökfras</p>";
+		} else {
+			// Visa det första receptet som hittades
+			renderRecipe(data.recipes[0]);
+		}
 	} catch (error) {
 		console.error("Något gick fel: " + error);
+		messageEl.innerHTML = "Något gick fel. Försök igen senare.";
 	}
 }
 
