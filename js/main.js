@@ -82,6 +82,17 @@ function renderRecipe(recipe) {
 	ingredientsHeadingEl.textContent = "Ingredients";
 	instructionsHeadingEl.textContent = "Instructions";
 
+	// Lägg till klass för styling av receptinformationen
+	recipeInfoEl.classList.add("recipe-info");
+
+	// Skapa receptinformationstext
+	recipeInfoEl.innerHTML = `
+	<p><strong>Servings:</strong> ${recipe.servings}</p>
+    <p><strong>Prep time:</strong> ${recipe.prepTimeMinutes} minutes</p>
+    <p><strong>Cooking time:</strong> ${recipe.cookTimeMinutes} minutes</p>
+    <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
+	`;
+
 	// Skapa listpunkt för varje ingrediens
 	recipe.ingredients.forEach((ingredient) => {
 		const ingredientEl = document.createElement("li");
@@ -99,6 +110,7 @@ function renderRecipe(recipe) {
 	// Lägg in elementen i article
 	articleEl.appendChild(recipeNameEl);
 	articleEl.appendChild(recipeImageEl);
+	articleEl.appendChild(recipeInfoEl);
 	articleEl.appendChild(ingredientsHeadingEl);
 	articleEl.appendChild(ingredientsListEl);
 	articleEl.appendChild(instructionsHeadingEl);
