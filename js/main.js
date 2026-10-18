@@ -7,9 +7,7 @@
 // Hämta element från DOM
 const searchFormEl = document.querySelector("#searchform");
 const searchInputEl = document.querySelector("#search");
-
 const recipeSectionEl = document.querySelector("#recipe");
-
 const errorEl = document.querySelector("#error");
 const messageEl = document.querySelector("#message");
 
@@ -17,12 +15,13 @@ const messageEl = document.querySelector("#message");
 
 // När sökformuläret skickas
 searchFormEl.addEventListener("submit", (event) => {
+	// Förhindra att sidan laddas om
 	event.preventDefault();
 
 	// Rensa tidigare recept och felmeddelanden
 	clearPage();
 
-	// Validera sökfältet och hämta recept
+	// Validera sökfältet och hämta recept om valideringen lyckas
 	if (validateSearchInput()) {
 		getRecipe();
 	}
@@ -32,12 +31,12 @@ searchFormEl.addEventListener("submit", (event) => {
 
 // Validerar sökfältet
 function validateSearchInput() {
-	// Kontrollera om en sökfras har angivits
-	if (searchInputEl.value.trim() === "") {
+	// Kontrollera att en sökfras har angivits
+	if (searchInputEl.value.trim() !== "") {
+		return true;
+	} else {
 		errorEl.textContent = "Du måste ange en sökfras!";
 		return false;
-	} else {
-		return true;
 	}
 }
 
@@ -50,18 +49,18 @@ function clearPage() {
 
 // Hämtar recept från API
 async function getRecipe() {
-	// Variabel för sökfrasen
-	const searchInput = searchInputEl.value.trim();
-
 	// Hämta data med fetch
 	try {
-		const response = await fetch(`https://dummyjson.com/recipes/search?q=${searchInput}`);
+		const response = await fetch(
+			`https://dummyjson.com/recipes/search?q=${searchInputEl.value.trim()}`,
+		);
 
-		// Kontrollera att API-anropet lyckades
+		// Kontrollera att API-anropet lyckats
 		if (!response.ok) {
 			throw new Error("Kunde inte hämta recept.");
 		}
 
+		// Omvandla JSON till JavaScript-objekt
 		const data = await response.json();
 
 		// Kontrollera att sökfrasen genererade ett recept
@@ -72,6 +71,7 @@ async function getRecipe() {
 			renderRecipe(data.recipes[0]);
 		}
 	} catch (error) {
+		// Skriv ut eventuella felmeddelanden från API-anropet
 		console.error("Något gick fel: " + error);
 		messageEl.innerHTML = "Något gick fel. Försök igen senare.";
 	}
