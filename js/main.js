@@ -57,7 +57,7 @@ async function getRecipe() {
 
 		// Kontrollera att API-anropet lyckats
 		if (!response.ok) {
-			throw new Error("Kunde inte hämta recept.");
+			throw new Error("API-anropet misslyckades. Status:" + response.status);
 		}
 
 		// Omvandla JSON till JavaScript-objekt
