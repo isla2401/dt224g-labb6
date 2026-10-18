@@ -19,6 +19,9 @@ const messageEl = document.querySelector("#message");
 searchFormEl.addEventListener("submit", (event) => {
 	event.preventDefault();
 
+	// Rensa tidigare recept och felmeddelanden
+	clearPage();
+
 	// Validera sökfältet och hämta recept
 	if (validateSearchInput()) {
 		getRecipe();
@@ -29,9 +32,6 @@ searchFormEl.addEventListener("submit", (event) => {
 
 // Validerar sökfältet
 function validateSearchInput() {
-	// Rensa tidigare felmeddelanden
-	errorEl.textContent = "";
-
 	// Kontrollera om en sökfras har angivits
 	if (searchInputEl.value.trim() === "") {
 		errorEl.textContent = "Du måste ange en sökfras!";
@@ -39,6 +39,13 @@ function validateSearchInput() {
 	} else {
 		return true;
 	}
+}
+
+// Rensar recept och felmeddelanden
+function clearPage() {
+	recipeSectionEl.innerHTML = "";
+	errorEl.innerHTML = "";
+	messageEl.innerHTML = "";
 }
 
 // Hämtar recept från API
@@ -72,9 +79,6 @@ async function getRecipe() {
 
 // Visar receptet på sidan
 function renderRecipe(recipe) {
-	// Rensa tidigare recept
-	recipeSectionEl.innerHTML = "";
-
 	// Skapa element i DOM
 	const articleEl = document.createElement("article");
 
